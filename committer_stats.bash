@@ -9,19 +9,26 @@ fi
 
 main() {
         exit_if_not_repository
-        local branch changes user_commits all_commits percentage
+        local branch changes
+        local user_commits all_commits
+        local average_delta percentage typical_time
         branch="$(get_branch)"
         changes="$(lines_changed)"
         user_commits="$(get_user_commits)"
         all_commits="$(get_all_commits)"
         percentage="$(calculate_percentage ${user_commits} ${all_commits})"
+        average_delta="$((changes / user_commits))"
+        typical_times="$(typical_commit_times)"
         echo "Stats for ${GIT_USER} on ${branch}:"
-        echo "  Commits: ${user_commits} (${percentage}% of all commits)"
-        echo "  Lines: ${changes}"
-        echo "  Line delta: $((changes))"
+        echo "   Commits: ${user_commits} (${percentage}% of all commits)"
+        echo "   Lines: ${changes}"
+        echo "   Total delta: $((changes))"
+        echo "   Average delta/commit: ${average_delta}"
+        echo "   Typical commit times:"
+        echo "${typical_times}"
         echo ""
         echo "Stats for all users on ${branch}:"
-        echo "  Commits: ${all_commits}"
+        echo "   Commits: ${all_commits}"
 }
 
 exit_if_not_repository() {
@@ -55,6 +62,18 @@ calculate_percentage() {
     num="${1}"
     denom="${2}"
     echo "scale=6; ${num}/${denom}" | bc | awk '{printf "%.4f\n", $0*100}'
+}
+
+typical_commit_times() {
+    git log --author="${GIT_USER}" --pretty=format:"%ad" \
+        | awk '{print $4}' \
+        | cut -d: -f1 \
+        | sort \
+        | uniq -c \
+        | sort -nr \
+        | head -n3 \
+        | awk '{print $2 ":00-" $2+1 ":00 (" $1 " commits)"}' \
+        | sed 's/^/      /g'
 }
 
 main
