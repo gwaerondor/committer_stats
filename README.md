@@ -13,10 +13,15 @@ commiter_stats.bash "Nanaa Mihgo"
 It outputs something like
 ```
 Stats for Nanaa Mihgo on master:
-  Commits: 3 (30.0000% of all commits)
-  Lines: +674 -10
-  Line delta: 664
+   Commits: 4 (40.0000% of all commits)
+   Lines: +781 -6
+   Total delta: 775
+   Average delta/commit: 193
+   Typical commit times:
+      11:00-12:00 (1 commits)
+      09:00-10:00 (1 commits)
+      16:00-17:00 (2 commits)
 
 Stats for all users on master:
-  Commits: 10
+   Commits: 10
 ```
