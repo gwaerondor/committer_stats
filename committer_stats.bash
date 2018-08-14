@@ -51,7 +51,7 @@ get_all_commits() {
 }
 
 calculate_percentage() {
-    local num denom part percentage
+    local num denom
     num="${1}"
     denom="${2}"
     echo "scale=6; ${num}/${denom}" | bc | awk '{printf "%.4f\n", $0*100}'
