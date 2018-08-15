@@ -17,7 +17,7 @@ main() {
         user_commits="$(get_user_commits)"
         all_commits="$(get_all_commits)"
         percentage="$(calculate_percentage ${user_commits} ${all_commits})"
-        average_delta="$(get_average_delta ${changes} ${user_commits})"
+        average_delta="$(get_average_delta $((changes)) ${user_commits})"
         typical_times="$(typical_commit_times)"
         echo "Stats for ${GIT_USER} on ${branch}:"
         echo "   Commits: ${user_commits} (${percentage}% of all commits)"
