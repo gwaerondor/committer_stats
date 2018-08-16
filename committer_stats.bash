@@ -24,7 +24,7 @@ main() {
         echo "   Lines: ${changes}"
         echo "   Total delta: $((changes))"
         echo "   Average delta/commit: ${average_delta}"
-        echo "   Typical commit times:"
+        echo "   Typical commit times (UTC):"
         echo "${typical_times}"
         echo ""
         echo "Stats for all users on ${branch}:"
@@ -78,14 +78,15 @@ get_average_delta() {
 
 
 typical_commit_times() {
-    git log --author="${GIT_USER}" --pretty=format:"%ad" \
-        | awk '{print $4}' \
+    TZ=UTC git log --author="${GIT_USER}" \
+      --pretty=format:"%ad" --date=iso-local \
+        | awk '{print $2}' \
         | cut -d: -f1 \
         | sort \
         | uniq -c \
         | sort -nr \
         | head -n3 \
-        | awk '{print $2 ":00-" $2+1 ":00 (" $1 " commits)"}' \
+        | awk '{print $2 ":00-" sprintf("%02d", $2+1) ":00 (" $1 " commits)"}' \
         | sed 's/^/      /g'
 }
 
