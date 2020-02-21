@@ -7,6 +7,13 @@ else
     GIT_USER="${1}"
 fi
 
+if [ -z "${2}" ]
+then
+    AfterDate=""
+else
+    AfterDate="--after=${2}"
+fi
+
 main() {
         exit_if_not_repository
         local branch changes
@@ -41,20 +48,20 @@ print_error_and_exit() {
 }
 
 get_branch() {
-    git branch | grep -P '^\*' | cut -d' ' -f2
+    git branch | grep '^\*' | cut -d' ' -f2
 }
 
 lines_changed() {
-    git log --author="${GIT_USER}" --pretty=tformat: --numstat \
+    git log ${AfterDate} --author="${GIT_USER}" --pretty=tformat: --numstat \
         | awk 'BEGIN {ins=0; rem=0}; {ins+=$1; rem+=$2} END {print "+" ins " -" rem}'
 }
 
 get_user_commits() {
-    git rev-list HEAD --count --author="${GIT_USER}"
+    git rev-list HEAD --count --author="${GIT_USER}" ${AfterDate}
 }
 
 get_all_commits() {
-    git rev-list HEAD --count
+    git rev-list HEAD --count ${AfterDate}
 }
 
 calculate_percentage() {
@@ -76,9 +83,8 @@ get_average_delta() {
     fi
 }
 
-
 typical_commit_times() {
-    TZ=UTC git log --author="${GIT_USER}" \
+    TZ=UTC git log ${AfterDate} --author="${GIT_USER}" \
       --pretty=format:"%ad" --date=iso-local \
         | awk '{print $2}' \
         | cut -d: -f1 \
