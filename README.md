@@ -10,6 +10,11 @@ Or specify another author to get their stats.
 commiter_stats.bash "Nanaa Mihgo"
 ```
 
+Or specify another author and an after date to get their recent stats.
+```bash
+commiter_stats.bash "Nanaa Mihgo" 2020-01-01
+```
+
 It outputs something like
 ```
 Stats for Nanaa Mihgo on master:
